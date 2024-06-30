@@ -1,2 +1,6 @@
-# foss-app-stores
-A Magisk module that installs Aurora Store &amp; F-Droid into the system
+# FOSS App Stores
+A Magisk module that installs the following FOSS App Stores into the system:
+
+- Aurora Store
+- F-Droid
+

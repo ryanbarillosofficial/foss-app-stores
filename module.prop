@@ -1,0 +1,6 @@
+id=foss_app_stores
+name=FOSS App Stores
+version=1.0.0
+versionCode=1
+author=ryanbarillos
+description=Install Aurora Store & F-Droid systemlessly

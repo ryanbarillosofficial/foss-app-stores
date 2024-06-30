@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exceptions>
+    <exception package="com.aurora.store">
+        <permission name="android.permission.POST_NOTIFICATIONS" />
+        <permission name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        <permission name="android.permission.READ_EXTERNAL_STORAGE" />
+        <permission name="android.permission.REQUEST_INSTALL_PACKAGES" />
+        <permission name="android.permission.REQUEST_DELETE_PACKAGES" />
+    </exception>
+</exceptions>

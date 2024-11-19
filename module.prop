@@ -1,6 +1,6 @@
 id=foss_app_stores
 name=FOSS App Stores
-version=1.0.1
-versionCode=1
+version=v1.0.1
+versionCode=10001
 author=ryanbarillosofficial
 description=Installs Aurora Store, F-Droid & its Privileged Extension systemlessly

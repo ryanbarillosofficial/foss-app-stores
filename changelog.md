@@ -1,5 +1,4 @@
-# v1.0.1
+# v1.0.2
 
 ## What's New?
-- Updated packages to latest versions
-- Module can now be updated via Magisk or KernelSU app directly
+- Fixed the module's update process in module.prop & update.jdon 

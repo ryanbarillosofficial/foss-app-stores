@@ -1,0 +1,27 @@
+{
+    "aurora_store": {
+        "app_name": "AuroraStore",
+        "pkg_name":"com.aurora.store",
+        "link" : "",
+        "download_directly": false,
+        "where_to_get": "f_droid",
+        "location": "priv-app"
+    },
+    "f_droid": {
+        "app_name": "F-Droid",
+        "pkg_name": "org.fdroid.fdroid",
+        "link": "https://f-droid.org/F-Droid.apk",
+        "download_directly": false,
+        "where_to_get": "f_droid",
+        "location": "app"
+        
+    },
+    "f_droid_privileged_extension": {
+        "app_name": "F-DroidPrivilegedExtension",
+        "pkg_name":"org.fdroid.fdroid.privileged",
+        "link" : "",
+        "download_directly": false,
+        "where_to_get": "f_droid",
+        "location": "priv-app"
+    }
+}

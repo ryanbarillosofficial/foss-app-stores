@@ -1,4 +1,5 @@
-# v1.0.3
+# v1.0.4
 
 ## What's New?
-- Fixed the module's update process in update.json 
+- Updated apps to latest versions
+- Created an update script to easily update this module

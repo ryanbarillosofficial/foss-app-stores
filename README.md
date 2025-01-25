@@ -12,5 +12,5 @@ Ensuring these app stores will be installed into your system, regardless of your
 - ARMv8 — Modern Android Phones
 - x86[_64] — Android x86 and <strong>[Bliss OS](https://blissos.org/)</strong>
 
-### Downloads
+## Downloads
 <b>[Get the latest version right here!](https://github.com/ryanbarillosofficial/foss-app-stores/releases)</b>

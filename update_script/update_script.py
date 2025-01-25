@@ -67,8 +67,6 @@ def web_scraping(pkg_name: str, where_to_get: str):
 
 
 
-
-
 def update_json():
     # Variables
     #
@@ -82,34 +80,64 @@ def update_json():
     with open(file = ("../" + json_name), encoding='utf-8') as json_file:
         update_json = json.load(json_file)
     json_file.close()
-    
-    # Inquire next version number
+    #
+    ## Split ' update_json["version"] ' for correct version formatting
+    #
+    version_number_list: list[str] = (update_json["version"]).replace("v", "").split(".")
+    version_number_pick: list[str] = [
+         "v" + str(int(version_number_list[0]) + 1) + ".0.0",
+         "v" + version_number_list[0] + "." + str(int(version_number_list[1]) + 1) + ".0",
+         "v" + version_number_list[0] + "." + version_number_list[1] + "." + str(int(version_number_list[len(version_number_list) - 1]) + 1)
+         ]
+    #
+    ## Inquire next version number
+    #
     print("FOSS App Stores Magisk Module\n")
     print("Current Version: " + update_json["version"])
-    version_new: str = input("New Version No.: v")
-    version_new__double_check: str = input("Enter Once More: v")
+    time.sleep(1)
+    print("\nHow should we update this package?")
+    print("\t Option 1 — " + version_number_pick[0] + " — a MAJOR update")
+    print("\t Option 2 — " + version_number_pick[1] + " — a MINOR update")
+    print("\t Option 3 — " + version_number_pick[2] + " — a SUB-MINOR update")
 
-    while (version_new != version_new__double_check):
-         version_new__double_check: str = input("Enter Once More: v")
-    
-    # Update "version" property
-    #
-    update_json["version"] = "v" + version_new
+    answer: int = int(input("\nPlease enter your answer [1, 2, 3]: ")) - 1
 
-    # Update "versionCode" property
+    while (answer == '' or answer not in range (0, (len(version_number_list)))):
+         answer = int(input("Please enter your answer [1, 2, 3]: ")) - 1
+    time.sleep(1)
     #
-    num_array: list = version_new.split(".")
+    ## Update Version Number
+    #
+    print("Updating version number . . .")
+    version_number_list[answer] = str(int(version_number_list[answer]) + 1)
+    match(answer):
+        # Case 01: MAJOR Update
+        case 0:
+              for index, number in enumerate(version_number_list):
+                if (index != 0): version_number_list[index] = "0"
+        # Case 02: MINOR Update
+        case 1:
+              version_number_list[len(version_number_list) - 1] = "0"
+        # Case 03: SUB-MINOR Update
+        # Nothing to do
+    #
+    ## Update "version" property
+    #
+    update_json["version"] = version_number_pick[answer]
+    #
+    ## Update "versionCode" property
+    #
     versionCode_new: str = ""
 
-    for num in num_array:
+    for num in version_number_list:
          if int(num) in range (0, 10):
               versionCode_new += "0" + num
          else:
               versionCode_new += num
     
     update_json["versionCode"] = versionCode_new
-
-    # Push changes back to the "update.json" file
+    #
+    ## Push new changes into the "update.json" file
     #
     with open(file = ("../" + json_name), mode = "w", encoding='utf-8') as json_file:
          json.dump(update_json, json_file, ensure_ascii=False)
@@ -187,27 +215,28 @@ def make_zip_file():
 
 
 def main():
+    delay: float = 2.0 
     # Update "update.json" file
     update_json()
-    time.sleep(3.0)
+    time.sleep(delay)
     print("\nUpdated 'update.json' successfully!\n")
-    time.sleep(3.0)
+    time.sleep(delay)
 
     # Update APK's
     #
     print("Updating APK's shortly...")
-    time.sleep(3.0)
+    time.sleep(delay)
     print("Updating APK's starts...")
     update_apps()
     print("\nUpdated APK's successfully!\n")
-    time.sleep(3.0)
+    time.sleep(delay)
   
     # Finally, make a ZIP file compressing all changes
     print("Compiling changes into ZIP file shortly...")
-    time.sleep(3.0)
+    time.sleep(delay)
     print("Compiling changes into ZIP file starts...")
     make_zip_file()
-    time.sleep(3.0)
+    time.sleep(delay)
     print("\nCompiled changes into ZIP file successfully!")
 
 main()

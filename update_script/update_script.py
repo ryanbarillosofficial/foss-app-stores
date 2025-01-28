@@ -22,15 +22,23 @@ REFERENCE(s):
 - https://stackoverflow.com/questions/1855095/how-to-create-a-zip-archive-of-a-directory#25650295
 - https://stackoverflow.com/questions/17140886/how-to-search-and-replace-text-in-a-file#17141572
 """
+# For Regular Expressions
+import re as regex
+
+# For file management
 import os
-import time
 import json
 import shutil
-import requests
-import re as regex
+from zipfile import ZipFile as ZPF
+
+# For HTTP requests & web scraping
 from bs4 import BeautifulSoup as b_soup
 from bs4 import SoupStrainer as html_filter
+import requests
 import urllib.request as url_lib
+
+# Misc
+import time
 
 # Dictionary of places to grab APK's in case web scraping is required
 #
@@ -40,6 +48,26 @@ download_places: dict = {
         "link_app_regex": "^https://f-droid.org/repo/*_[0-9]+.apk$"
     }
 }
+# List of files to only include in zipping
+zip_file_list: list[str] = [
+    "META-INF",
+    "system",
+    "changelog.md",
+    "customize.sh",
+    "module.prop",
+    "update.json"
+]
+
+def zip_directory(zip_file, directory):
+    # Walk through the directory
+    for foldername, subfolders, filenames in os.walk(directory):
+        for filename in filenames:
+            # Create the full file path
+            file_path = os.path.join(foldername, filename)
+            # Write the file to the zip file, using arcname to avoid the directory structure
+            arcname = os.path.relpath(file_path, os.path.dirname(directory))
+            zip_file.write(file_path, arcname=arcname)
+
 
 def web_scraping(pkg_name: str, where_to_get: str):
     # Get HTML contents of website
@@ -100,11 +128,14 @@ def update_json():
     print("\t Option 2 — " + version_number_pick[1] + " — a MINOR update")
     print("\t Option 3 — " + version_number_pick[2] + " — a SUB-MINOR update")
 
-    answer: int = int(input("\nPlease enter your answer [1, 2, 3]: ")) - 1
+    answer_raw: str = input("\nPlease enter your answer [1, 2, 3]: ")
 
-    while (answer == '' or answer not in range (0, (len(version_number_list)))):
-         answer = int(input("Please enter your answer [1, 2, 3]: ")) - 1
+    while (not answer_raw.isdigit() or (int(answer_raw) - 1) not in range (0, (len(version_number_list)))):
+         answer_raw = input("\nPlease enter your answer [1, 2, 3]: ")
     time.sleep(1)
+
+    answer: int = int(answer_raw) - 1
+    print(answer)
     #
     ## Update Version Number
     #
@@ -207,29 +238,39 @@ def make_zip_file():
     file_name: str = "foss-app-stores"
 
     # Check if ZIP file already exists; then delete if it exists
-    if os.path.exists("../" + file_name + ".zip"): os.remove("../" + file_name + ".zip")
+    if os.path.exists("./" + file_name + ".zip"): os.remove("./" + file_name + ".zip")
     time.sleep(3)
     # Finally, make the ZIP file
-    shutil.make_archive(base_name = ("../" + file_name), format = "zip", root_dir="../")
+    # shutil.make_archive(base_name = ("../" + file_name), format = "zip", root_dir="../")
+    
+    with ZPF(file_name + ".zip", mode="w") as zip:
+        for file in zip_file_list:
+            file_name = "../" + file
+
+            if os.path.isdir(file_name):  # Check if it's a directory
+                zip_directory(zip, file_name)  # Zip the entire directory
+            else:
+                zip.write(filename=("../" + file), arcname=file)  # Write the individual file
+         
      
 
 
 def main():
     delay: float = 2.0 
-    # Update "update.json" file
-    update_json()
-    time.sleep(delay)
-    print("\nUpdated 'update.json' successfully!\n")
-    time.sleep(delay)
+    # # Update "update.json" file
+    # update_json()
+    # time.sleep(delay)
+    # print("\nUpdated 'update.json' successfully!\n")
+    # time.sleep(delay)
 
-    # Update APK's
-    #
-    print("Updating APK's shortly...")
-    time.sleep(delay)
-    print("Updating APK's starts...")
-    update_apps()
-    print("\nUpdated APK's successfully!\n")
-    time.sleep(delay)
+    # # Update APK's
+    # #
+    # print("Updating APK's shortly...")
+    # time.sleep(delay)
+    # print("Updating APK's starts...")
+    # update_apps()
+    # print("\nUpdated APK's successfully!\n")
+    # time.sleep(delay)
   
     # Finally, make a ZIP file compressing all changes
     print("Compiling changes into ZIP file shortly...")
